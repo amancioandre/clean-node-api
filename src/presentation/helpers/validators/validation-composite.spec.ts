@@ -44,4 +44,12 @@ describe('Validation Composite', () => {
     })
     expect(error).toEqual(new Error())
   })
+
+  test('Should return null if all internal validation succeeds.', () => {
+    const { sut } = makeSut()
+    const error = sut.validate({
+      field: 'any_value'
+    })
+    expect(error).toBeFalsy()
+  })
 })
