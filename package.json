@@ -5,8 +5,11 @@
   "main": "index.js",
   "scripts": {
     "start": "node dist/main/server.js",
-    "build": "rimraf dist && tsc",
+    "debug": "node --inspect=0.0.0.0:9222 --nolazy dist/main/server.js",
     "dev": "sucrase-node src/main/server.ts",
+    "build": "rimraf dist && tsc",
+    "up": "npm run build && docker-compose up -d",
+    "down": "docker-compose down",
     "test": "jest --passWithNoTests --silent --noStackTrace --runInBand",
     "test:verbose": "jest --passWithNoTests",
     "test:unit": "npm test -- --watch -c jest-unit-config.js",
@@ -50,5 +53,8 @@
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.5.9",
     "validator": "^13.1.1"
+  },
+  "engines": {
+    "node": "12.x"
   }
 }
