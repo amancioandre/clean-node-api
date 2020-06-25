@@ -1,7 +1,7 @@
 import { SignUpController } from './signup-controller'
 import { ServerError } from '../../errors'
 import { AddAccount, AddAccountModel, AccountModel, Validation, AuthenticationModel, Authentication } from './signup-controller-protocols'
-import { badRequest } from '../../helpers/http/http-helper'
+import { badRequest, serverError } from '../../helpers/http/http-helper'
 
 const makeValidation = (): Validation => {
   class ValidationStub implements Validation {
@@ -167,5 +167,20 @@ describe('SingUp Controller', () => {
       email: 'any_email@mail.com',
       password: 'any_password'
     })
+  })
+
+  test('Should return 500 if Authentication throwns an exception.', async () => {
+    const { sut, authenticationStub } = makeSut()
+    const httpRequest = {
+      body: {
+        email: 'invalid_email@mail.com',
+        password: 'any_password'
+      }
+    }
+    jest.spyOn(authenticationStub, 'auth').mockReturnValueOnce(
+      new Promise((resolve, reject) => reject(new Error()))
+    )
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 })
